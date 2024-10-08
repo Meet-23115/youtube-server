@@ -25,10 +25,39 @@ const db = client.db('Project-1');
 const app = express();
 app.use(cors()); 
 
+
 // Define a port to listen on
 const PORT = 8080;
 
 // Set up a simple route for the home page
+
+app.post('/login',async (req, res)=>{
+    
+    const user = await db.collection('users').findOne();
+    console.log(user._id)
+
+    res.send(user)
+})
+app.post('/auth', async (req, res)=>{
+    const user = await db.collection('users').findOne();
+    console.log(user._id)
+
+    res.send(user)
+})
+// app.get('/setupUser', async(req, res)=>{
+//     const videos = await db.collection('videos').find().toArray();
+    
+//         const user = await db.collection('users').updateOne({name:"Meet"}, {$set:{
+//             videos:videos
+//         }});
+//         // console.log(item)
+    
+    
+//     // return user
+    
+//     res.send(videos)
+
+// })
 app.get('/topbar', (req, res) => {
     const topbarData = ['All', 'Music', 'Mixes', 'Gaming', 'Sitcoms', 'Karan Aujla', 'Web Series', 'Indian Pop Music', 'Lunches', 'Live', 'Gadgets', 'Computer Science', 'Comedy', 'Cars', 'Watched', 'New To You']
     res.send(topbarData);
@@ -38,6 +67,7 @@ app.get('/videos', async(req, res)=>{
     // console.log(video);
     res.send(videos);
 })
+
 
 // Start the server and listen on the specified port
 app.listen(PORT, () => {
