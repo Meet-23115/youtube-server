@@ -1,7 +1,8 @@
 const { MongoClient } = require("mongodb");
+require('dotenv').config();
 
-const uri = "mongodb+srv://Meet-dev:Meet%402315@cluster0.fcx15.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-const client = new MongoClient(uri);
+
+const client = new MongoClient(process.env.MONGODB_URI);
 const db = client.db('Project-1');
 
 

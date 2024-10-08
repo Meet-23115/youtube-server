@@ -30,7 +30,6 @@ const PORT = 8080;
 
 // Set up a simple route for the home page
 app.get('/topbar', (req, res) => {
-    console.log('requested')
     const topbarData = ['All', 'Music', 'Mixes', 'Gaming', 'Sitcoms', 'Karan Aujla', 'Web Series', 'Indian Pop Music', 'Lunches', 'Live', 'Gadgets', 'Computer Science', 'Comedy', 'Cars', 'Watched', 'New To You']
     res.send(topbarData);
 });
