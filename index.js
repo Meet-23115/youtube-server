@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 
 
-const client = require('./db/mongo');
+const client = require('./src/db/mongo');
 
 async function run() {
     try {
