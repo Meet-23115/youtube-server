@@ -1,26 +1,24 @@
-const { MongoClient } = require("mongodb");
-require('dotenv').config();
+import mongoose from "mongoose"
+import { DB_NAME } from "../../constansts.js"
+
+// require('dotenv').config();
 
 
-const client = new MongoClient(process.env.MONGODB_URI);
-const db = client.db('Project-1');
+// const client = new MongoClient(process.env.MONGODB_URI);
+// const db = client.db('Project-1');
+
+const connectDb = async()=>{
+    try {
+        
+        const connectionInstance = await mongoose.connect(`${process.env.MONGODB_URI}`)
+        console.log(`\n MongoDb connected !! DB HOST: ${connectionInstance.connection.host}`)
+    } catch (error) {
+        console.log('MONGODB CONNECTION FAILED: ', error)   
+        process.exit(1)
+    }
+}
 
 
-// async function run() {
-//     try {
-//         await client.connect();
-//         // const db = client.db('Project-1'); // Replace with your database name
 
-//         // // Now you can access the videos collection
-//         // const video = await db.collection('videos').findOne();
-//         // console.log(video);
-//     } catch (err) {
-//         console.error(err);
-//     } finally {
-//         await client.close();
-//     }
-// }
-
-// run().catch(console.dir);
-
-module.exports = client; 
+export default connectDb
+// module.exports = client; 
