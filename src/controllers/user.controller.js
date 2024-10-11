@@ -24,10 +24,11 @@ const registerUser = asyncHandler(async(req, res)=>{
         
     }
     else{
-       const imageRes = await uploadOnCloudinary(imageLocalPath);
+       const imageRes = await uploadOnCloudinary(imageLocalPath)
+       fs.unlinkSync(imageLocalPath)
         const imageUrl = imageRes.url
         const user = await User.create({email,password, imageUrl})
-        fs.unlinkSync(imageLocalPath);
+        
         // console.log(user)
         return res.status(201).send({
             message:"user created",
