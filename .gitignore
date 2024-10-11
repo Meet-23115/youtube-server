@@ -1,0 +1,38 @@
+# MacOS system files
+.DS_Store
+
+# Node.js dependencies
+/node_modules
+
+# Python compiled files
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Java files
+*.class
+*.jar
+*.war
+
+# Log files
+*.log
+
+# Environment variables
+.env
+
+# IDE configuration files
+.idea/
+.vscode/
+
+# Build output
+/dist/
+build/
+
+# Others
+*.tmp
+*.bak
+*.swp
+
+# Windows system files
+Thumbs.db
+Desktop.ini
