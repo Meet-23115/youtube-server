@@ -1,6 +1,7 @@
 import {asyncHandler} from '../utils/asyncHandler.js'
 import fs from 'fs'
-import {User} from '../models/Users.model.js'
+import {User} from '../models/Users.model.js';
+import uploadOnCloudinary from "../utils/cloudinary.js"
 
 
 const registerUser = asyncHandler(async(req, res)=>{
@@ -20,15 +21,18 @@ const registerUser = asyncHandler(async(req, res)=>{
             message:"User already exists",
             _id:existedUser._id
         })
+        
     }
     else{
-        console.log(imageLocalPath)
-        const user = await User.create({email,password, imageLocalPath})
+       const imageRes = await uploadOnCloudinary(imageLocalPath);
+        const imageUrl = imageRes.url
+        const user = await User.create({email,password, imageUrl})
         fs.unlinkSync(imageLocalPath);
-        console.log(user)
-        return res.status(200).send({
+        // console.log(user)
+        return res.status(201).send({
             message:"user created",
-            _id:user._id
+            success:true
+            // _id:user._id
         })
     }
 })
