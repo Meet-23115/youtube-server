@@ -5,14 +5,11 @@ import uploadOnCloudinary from "../utils/cloudinary.js"
 
 
 const registerUser = asyncHandler(async(req, res)=>{
-    
     const email = req.body.email;
     const password = req.body.password;
     const imageLocalPath = req.files?.image[0]?.path;
     
-    
-    
-    const existedUser =await User.findOne({email})
+    const existedUser = await User.findOne({email})
     
     if(existedUser){
         fs.unlinkSync(imageLocalPath);
@@ -37,5 +34,7 @@ const registerUser = asyncHandler(async(req, res)=>{
         })
     }
 })
+
+
 
 export {registerUser}

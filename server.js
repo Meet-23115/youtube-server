@@ -11,7 +11,8 @@ server.use(cors({
 }))
 server.use(cookieParser())
 server.use(express.json())
-server.use(bodyParser.urlencoded({ extended: true }));
+
+server.use(bodyParser.urlencoded({ extended: false }));
 server.use(express.static("public"))
 
 // import routers
