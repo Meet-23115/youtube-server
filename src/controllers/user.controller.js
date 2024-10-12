@@ -8,11 +8,24 @@ const registerUser = asyncHandler(async(req, res)=>{
     const email = req.body.email;
     const password = req.body.password;
     const imageLocalPath = req.files?.image[0]?.path;
+
+    if(!email){
+        fs.unlinkSync(imageLocalPath);
+        return res.status(400).send({
+            message:"email is empty"
+        })
+    }
+    if(!password){
+        fs.unlinkSync(imageLocalPath);
+        return  res.status(400).send({
+            message:"password is empty"
+        })
+    }
     
     const existedUser = await User.findOne({email})
     
     if(existedUser){
-        fs.unlinkSync(imageLocalPath);
+        
         console.log(existedUser)
         return res.status(400).send({
             message:"User already exists",
@@ -29,7 +42,8 @@ const registerUser = asyncHandler(async(req, res)=>{
         // console.log(user)
         return res.status(201).send({
             message:"user created",
-            success:true
+            success:true,
+            user
             // _id:user._id
         })
     }
