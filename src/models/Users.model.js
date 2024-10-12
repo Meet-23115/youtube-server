@@ -13,7 +13,7 @@ const userSchema = new Schema({
         type:String,
         required:true
     },
-    imageUrl: {type:String}
+    imageUrl: {type:String, default:"none"}
 }, {timestamps:true})
 
 userSchema.pre("save", async function (next) {
