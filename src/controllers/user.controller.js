@@ -92,7 +92,7 @@ const loginUser = asyncHandler(async(req, res)=>{
 
 const logoutUser = asyncHandler(async(req, res)=>{
     const user = req.user;
-    user.refreshToken = undefined;
+    user.refreshToken = "";
     await user.save({ validateBeforeSave: false });
     
     
@@ -102,7 +102,7 @@ const logoutUser = asyncHandler(async(req, res)=>{
     res
     .clearCookie('accessToken', { httpOnly: true, secure: true, sameSite: 'strict' })
 .clearCookie('refreshToken', { httpOnly: true, secure: true, sameSite: 'strict' })
-.json(new ApiResponse(200, "User logged out"))
+.json(new ApiResponse(200, {}, "User logged out"))
 
 })
 
