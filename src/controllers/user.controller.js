@@ -3,6 +3,8 @@ import fs from 'fs'
 import {User} from '../models/Users.model.js';
 import uploadOnCloudinary from "../utils/cloudinary.js"
 import {ApiError} from '../utils/ApiError.js'
+import {ApiResponse} from '../utils/ApiResponse.js'
+
 
 
 const registerUser = asyncHandler(async(req, res)=>{
@@ -68,12 +70,41 @@ const loginUser = asyncHandler(async(req, res)=>{
     }
     
     const isValidPassword = await user.isPasswordCorrect(password)
-    res.send(isValidPassword)
 
-  
+    if (!isValidPassword) {
+        throw new ApiError(401,  "Invalid password")
+    }
+    
+    const refreshToken =await user.generateRefreshToken();
+    const accessToken =await user.generateAccessToken()
+
+    user.refreshToken = refreshToken
+    await user.save({ validateBeforeSave: false })
+
+    res
+    .status(200)
+    .cookie('accessToken', accessToken, { httpOnly: true, secure: true, maxAge: 900000, sameSite: 'strict' })
+    .cookie('refreshToken', refreshToken, { httpOnly: true, secure: true, maxAge: 604800000, sameSite: 'strict' })
+    .send({ message:"logged in", success:true, user:{...user._doc,  password: undefined, refreshToken: undefined} })
+
+    
+})
+
+const logoutUser = asyncHandler(async(req, res)=>{
+    const user = req.user;
+    user.refreshToken = undefined;
+    await user.save({ validateBeforeSave: false });
+    
+    
+    if(!user){
+        throw new ApiError(404, "User not found")
+    }
+    res
+    .clearCookie('accessToken', { httpOnly: true, secure: true, sameSite: 'strict' })
+.clearCookie('refreshToken', { httpOnly: true, secure: true, sameSite: 'strict' })
+.json(new ApiResponse(200, "User logged out"))
 
 })
 
 
-
-export {registerUser, loginUser}
+export {registerUser, loginUser,  logoutUser}
