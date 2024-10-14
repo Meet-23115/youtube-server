@@ -38,9 +38,10 @@ const registerUser = asyncHandler(async(req, res)=>{
         const user = await User.create({email, password, imageUrl: imageRes.url || ""})
         if(imageLocalPath) fs.unlinkSync(imageLocalPath);
 
-        if(!user) throw new ApiError(500, "Something went wrong");
+        if(!user) return  res.json(new ApiError(500, "Something went wrong"))
         
-        return res.status(201).send({ message:"user created", success:true, user: { ...user._doc, password: undefined, refreshToken: undefined } })
+        return res.json(new ApiResponse(200, {user: { ...user._doc, password: undefined, refreshToken: undefined } }, "User created"))
+        //  res.status(201).send({ message:"user created", success:true, user: { ...user._doc, password: undefined, refreshToken: undefined } })
 
     } catch (error) {
         console.log('ERROR: ', error)
