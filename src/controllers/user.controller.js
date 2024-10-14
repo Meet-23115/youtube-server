@@ -4,7 +4,7 @@ import {User} from '../models/Users.model.js';
 import uploadOnCloudinary from "../utils/cloudinary.js"
 import {ApiError} from '../utils/ApiError.js'
 import {ApiResponse} from '../utils/ApiResponse.js'
-
+import  jwt  from 'jsonwebtoken';
 
 
 const registerUser = asyncHandler(async(req, res)=>{
@@ -14,17 +14,16 @@ const registerUser = asyncHandler(async(req, res)=>{
         const imageLocalPath = req.files?.image?.[0]?.path;
     
         if(!email){
+            console.log('hit')
             if(imageLocalPath) fs.unlinkSync(imageLocalPath);
-            return res.status(400).send({
-                message:"email is empty"
-            })
+            return res.status(400).json(new ApiError(401, "Email is empty"));
+            
+          
         } 
 
         if(!password){
             if(imageLocalPath) fs.unlinkSync(imageLocalPath);
-            return  res.status(400).send({
-                message:"password is empty"
-            })
+            return  res.json(new ApiError(400, "Password is empty"))
         }
         
         const existedUser = await User.findOne({email})
@@ -32,10 +31,7 @@ const registerUser = asyncHandler(async(req, res)=>{
         if(existedUser){
             if(imageLocalPath) fs.unlinkSync(imageLocalPath);
             console.log(existedUser)
-            return res.status(400).send({
-                message:"User already exists",
-                _id:existedUser._id
-            })   
+            return res.json(new ApiError(401, "User already exists")).status(401)
         }
 
         const imageRes = imageLocalPath ? await uploadOnCloudinary(imageLocalPath) : { url: "" };
@@ -54,25 +50,33 @@ const registerUser = asyncHandler(async(req, res)=>{
 
 const loginUser = asyncHandler(async(req, res)=>{
     const {email,  password} = req.body;
-    
+    console.log(email, password)
     
     
     if(!email){
-        throw new ApiError(400, "Email is required")
+        return res
+        .status(400)
+        .json(new ApiResponse(400, {}, "Email is empty"))
     }
     if(!password){
-        throw new ApiError(400, "Password is required")
+        return res
+        .status(401)
+        .json(new ApiResponse(401, {}, "Password is empty"))
     }
 
     const user = await User.findOne({email});
     if(!user){
-        throw new ApiError(404, "User not found")
+        return res
+        .status(402)
+        .json(new ApiResponse(402, {}, "User not found"))
     }
     
     const isValidPassword = await user.isPasswordCorrect(password)
 
     if (!isValidPassword) {
-        throw new ApiError(401,  "Invalid password")
+        return res
+        .status(403)
+        .json(new ApiResponse(403, {}, "Invalid Password"))
     }
     
     const refreshToken =await user.generateRefreshToken();
@@ -83,8 +87,13 @@ const loginUser = asyncHandler(async(req, res)=>{
 
     res
     .status(200)
-    .cookie('accessToken', accessToken, { httpOnly: true, secure: true, maxAge: 900000, sameSite: 'strict' })
-    .cookie('refreshToken', refreshToken, { httpOnly: true, secure: true, maxAge: 604800000, sameSite: 'strict' })
+    .cookie('accessToken', accessToken, { 
+        maxAge: 900000, 
+        sameSite: 'None', 
+        secure: false, 
+        httpOnly: true 
+      })
+    .cookie('refreshToken', refreshToken, { httpOnly: true, secure: false, maxAge: 604800000, sameSite: 'None' })
     .send({ message:"logged in", success:true, user:{...user._doc,  password: undefined, refreshToken: undefined} })
 
     
@@ -106,5 +115,37 @@ const logoutUser = asyncHandler(async(req, res)=>{
 
 })
 
+const updateToken = asyncHandler(async(req, res)=>{
+    const  refreshToken = req.cookies.refreshToken;
+    if(!refreshToken){
+        return res.send({message:"Invalid refresh token"});
+    }
+    const decodedToken = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET,)
+    const userId = decodedToken._id;
+    const user = await User.findById(userId);
+    if(!user){
+        return res.send({message:"Invalid refresh token"});
+    }
+    if(user.refreshToken !==  refreshToken){
+        return res.send({message:"Invalid refresh token"});
+    }
 
-export {registerUser, loginUser,  logoutUser}
+    const newAccessToken = await user.generateAccessToken()
+    const newRefreshToken = await user.generateRefreshToken();
+    user.refreshToken = newRefreshToken;
+    await user.save({ validateBeforeSave: false });
+    
+    return res
+    .cookie('accessToken', newAccessToken, { 
+        maxAge: 900000, 
+        sameSite: 'None', 
+        secure: false, 
+        httpOnly: true 
+      })
+      .cookie('refreshToken', newRefreshToken, { httpOnly: true, secure: false, maxAge: 604800000, sameSite: 'None' })
+      .status(200)
+      .send({message:"Token updated"});
+
+})
+
+export {registerUser, loginUser,  logoutUser, updateToken}
