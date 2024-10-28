@@ -5,7 +5,9 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-
+server.get('/',(req, res)=>{
+    res.send('Hello World');
+})
 
 connectDb()
 .then(()=>{
