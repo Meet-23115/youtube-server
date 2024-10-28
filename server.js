@@ -10,7 +10,7 @@ server.use(cors({
     credentials:true
 }))
 
-server.options('*', cors());
+// server.options('*', cors());
 server.use(cookieParser())
 server.use(express.json())
 
@@ -20,8 +20,12 @@ server.use(express.static("public"))
 
 // import routers
 import userRouter from './src/routes/user.route.js'
+import dataRouter from './src/routes/data.route.js'
 
 //declare route
+
 server.use('/api/v1/user', userRouter)
+server.use('/api/v1/data', dataRouter )
+
 
 export default server;

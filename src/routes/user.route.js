@@ -5,6 +5,9 @@ import { userAuth } from "../middlewares/auth.middleware.js";
 
 const router = Router()
 
+router.route('/meet').get((req, res)=>{
+    return res.json({message: 'Hello from meet endpoint'});
+})
 router.route('/register').post(
     upload.fields([{
         name:"image",

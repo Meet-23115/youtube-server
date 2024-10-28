@@ -10,7 +10,6 @@ export const userAuth = asyncHandler(async(req, res, next)=>{
         console.log(token)
     
         if(!token){
-            console.log('undefined')
             return res.status(401).send({
                 status: false,
                 message: 'Access denied. No token provided.',
@@ -25,5 +24,6 @@ export const userAuth = asyncHandler(async(req, res, next)=>{
     } catch (error) {
         throw new ApiError(500, error?.message ||"Invalid access token");
     }
+
 
 })

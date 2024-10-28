@@ -35,7 +35,7 @@ const registerUser = asyncHandler(async(req, res)=>{
         }
 
         const imageRes = imageLocalPath ? await uploadOnCloudinary(imageLocalPath) : { url: "" };
-        const user = await User.create({email, password, imageUrl: imageRes.url || ""})
+        const user = await User.create({email, password, imageUrl: imageRes.url || "", topbar:['All', 'Music', 'Gaming', 'Playlists']})
         if(imageLocalPath) fs.unlinkSync(imageLocalPath);
 
         if(!user) return  res.json(new ApiError(500, "Something went wrong"))

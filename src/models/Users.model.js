@@ -17,7 +17,8 @@ const userSchema = new Schema({
     refreshToken:{
         type:String,
         default:""
-    }
+    },
+    topbar: [{ type: String, default: ['All', 'Music', 'Gaming'] }]
 }, {timestamps:true})
 
 userSchema.pre("save", async function (next) {
