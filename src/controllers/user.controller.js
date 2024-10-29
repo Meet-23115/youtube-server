@@ -90,11 +90,11 @@ const loginUser = asyncHandler(async(req, res)=>{
     .status(200)
     .cookie('accessToken', accessToken, { 
         maxAge: 900000, 
-        sameSite: 'None', 
+        sameSite: 'Lax', 
         secure: false, 
         httpOnly: true 
       })
-    .cookie('refreshToken', refreshToken, { httpOnly: true, secure: false, maxAge: 604800000, sameSite: 'None' })
+    .cookie('refreshToken', refreshToken, { httpOnly: true, secure: false, maxAge: 604800000, sameSite: 'Lax' })
     .send({ message:"logged in", success:true, user:{...user._doc,  password: undefined, refreshToken: undefined} })
 
     
@@ -149,4 +149,11 @@ const updateToken = asyncHandler(async(req, res)=>{
 
 })
 
-export {registerUser, loginUser,  logoutUser, updateToken}
+const userAuthorized = asyncHandler(async(req, res)=>{
+    const user = req.user;
+    return  res.json(new ApiResponse(200,  user, "User authorized"));
+
+
+})
+
+export {registerUser, loginUser,  logoutUser, updateToken, userAuthorized}
