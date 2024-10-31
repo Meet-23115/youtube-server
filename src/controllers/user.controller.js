@@ -170,4 +170,9 @@ const userAuthorized = asyncHandler(async (req, res) => {
 
 })
 
-export { registerUser, loginUser, logoutUser, updateToken, userAuthorized }
+const userData = asyncHandler(async(req, res)=>{
+    const user = req.user;
+    return res.json(new ApiResponse(200, { user: { ...user._doc, password: undefined, refreshToken: undefined } }, "User data"));
+})
+
+export { registerUser, loginUser, logoutUser, updateToken, userAuthorized, userData }
