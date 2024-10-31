@@ -5,6 +5,7 @@ import uploadOnCloudinary from "../utils/cloudinary.js"
 import { ApiError } from '../utils/ApiError.js'
 import { ApiResponse } from '../utils/ApiResponse.js'
 import jwt from 'jsonwebtoken';
+import { Topbar } from '../models/Topbar.model.js';
 
 
 const registerUser = asyncHandler(async (req, res) => {
@@ -37,6 +38,11 @@ const registerUser = asyncHandler(async (req, res) => {
         const imageRes = imageLocalPath ? await uploadOnCloudinary(imageLocalPath) : { url: "" };
         const user = await User.create({ email, password, imageUrl: imageRes.url || "", topbar: ['All', 'Music', 'Gaming', 'Playlists'] })
         if (imageLocalPath) fs.unlinkSync(imageLocalPath);
+        const topbar = await Topbar.create({
+            user: user._id,
+            videoUrl: "https://video.com",
+            thumbnailUrl: "https://thumnail.com"
+        });
 
         if (!user) return res.json(new ApiError(500, "Something went wrong"))
 

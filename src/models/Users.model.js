@@ -13,12 +13,11 @@ const userSchema = new Schema({
         type:String,
         required:true
     },
-    imageUrl: {type:String, default:"none"},
+    imageUrl: {type:String, defauzlt:"none"},
     refreshToken:{
         type:String,
         default:""
-    },
-    topbar: [{ type: String, default: ['All', 'Music', 'Gaming'] }]
+    }
 }, {timestamps:true})
 
 userSchema.pre("save", async function (next) {
