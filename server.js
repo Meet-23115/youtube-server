@@ -24,6 +24,7 @@ import dataRouter from './src/routes/data.route.js'
 
 //declare route
 
+
 server.use('/api/v1/user', userRouter)
 server.use('/api/v1/data', dataRouter )
 

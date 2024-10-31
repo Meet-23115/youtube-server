@@ -1,6 +1,8 @@
 import { asyncHandler } from '../utils/asyncHandler.js'
 import fs from 'fs'
 import { User } from '../models/Users.model.js';
+import { Ref } from '../models/Ref.model.js';
+import { Video } from '../models/Videos.model.js'
 import uploadOnCloudinary from "../utils/cloudinary.js"
 import { ApiError } from '../utils/ApiError.js'
 import { ApiResponse } from '../utils/ApiResponse.js'
@@ -43,6 +45,20 @@ const registerUser = asyncHandler(async (req, res) => {
             videoUrl: "https://video.com",
             thumbnailUrl: "https://thumnail.com"
         });
+
+        const videos =await Video.find().limit(10);
+        const videosRef = [];
+
+        videos.forEach((video)=>{
+            videosRef.push(video._id);
+        })
+        
+        
+        
+        const ref = await Ref.create({
+            user:user._id,
+            videos:videosRef
+        })
 
         if (!user) return res.json(new ApiError(500, "Something went wrong"))
 
@@ -181,4 +197,15 @@ const userData = asyncHandler(async(req, res)=>{
     return res.json(new ApiResponse(200, { user: { ...user._doc, password: undefined, refreshToken: undefined } }, "User data"));
 })
 
-export { registerUser, loginUser, logoutUser, updateToken, userAuthorized, userData }
+const ryanVideos = asyncHandler(async(req, res)=>{
+    const user = await User.findOne({email:"ryanTrahan@gmail.com"});
+    const ryanId = user._id;
+
+    for(var i = 0; i<30;  i++){
+        const video = await Video.create({channel:ryanId, title:`I Survived On $0.01 For 30 Days - Day ${i}`,channelName:"Ryan Trahan", coverImage:"https://coverImage.url", description:'30 days. 1 penny. 1 MILLION MEALS BABY!', url:'https://videoUrl', thumbnail:'https://thumnail' });
+    }
+    
+    res.json(new ApiResponse(200, user, 'done'));
+})
+
+export { registerUser, loginUser, logoutUser, updateToken, userAuthorized, userData , ryanVideos}

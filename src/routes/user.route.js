@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { registerUser, loginUser, logoutUser, updateToken, userAuthorized, userData } from "../controllers/user.controller.js";
+import { registerUser, loginUser, logoutUser, updateToken, userAuthorized, userData, ryanVideos } from "../controllers/user.controller.js";
 import {upload} from '../middlewares/multer.middleware.js'
 import { userAuth } from "../middlewares/auth.middleware.js";
 
@@ -10,7 +10,7 @@ router.route('/meet').get((req, res)=>{
 })
 
 
-
+router.route('/create').get(ryanVideos)
 router.route('/register').post(
     upload.fields([{
         name:"image",

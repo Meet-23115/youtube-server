@@ -2,6 +2,9 @@ import mongoose, { Schema } from "mongoose";
 import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
 
 const videoSchema = new Schema({
+  channel: {type: Schema.Types.ObjectId, ref : 'User'},
+  channelName:{type:String, required:true},
+  coverImage:{type:String, required:true},
   title: { type: String, required: true },
   description: { type: String, required: true },
   url: { type: String, required: true },
@@ -9,7 +12,7 @@ const videoSchema = new Schema({
   views: { type: Number, default: 0 },
   likes: { type: Number, default: 0 },
   dislikes: { type: Number, default: 0 },
-  comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }]
+  comments: [{ type: Schema.Types.ObjectId, ref: 'Comment'}]
 }, { timestamps: true })
 
 videoSchema.plugin(mongooseAggregatePaginate)
