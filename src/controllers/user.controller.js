@@ -198,14 +198,20 @@ const userData = asyncHandler(async(req, res)=>{
 })
 
 const ryanVideos = asyncHandler(async(req, res)=>{
+
     const user = await User.findOne({email:"ryanTrahan@gmail.com"});
     const ryanId = user._id;
 
+    const videoUp =await uploadOnCloudinary('./public/temp/videoplayback.mp4');
+    const coverImage = await  uploadOnCloudinary('./public/temp/changel-profile-pic-sample.jpg');
+    const thumbnail = await uploadOnCloudinary('./public/temp/sample-thumb.webp');
+
+
     for(var i = 0; i<30;  i++){
-        const video = await Video.create({channel:ryanId, title:`I Survived On $0.01 For 30 Days - Day ${i}`,channelName:"Ryan Trahan", coverImage:"https://coverImage.url", description:'30 days. 1 penny. 1 MILLION MEALS BABY!', url:'https://videoUrl', thumbnail:'https://thumnail' });
+        const video = await Video.create({channel:ryanId, title:`I Survived On $0.01 For 30 Days - Day ${i}`,channelName:"Ryan Trahan", coverImage:coverImage.url, description:'30 days. 1 penny. 1 MILLION MEALS BABY!', url: videoUp.url, thumbnail:thumbnail.url });
     }
     
-    res.json(new ApiResponse(200, user, 'done'));
+    res.json(new ApiResponse(200, videoUp, 'done'));
 })
 
 export { registerUser, loginUser, logoutUser, updateToken, userAuthorized, userData , ryanVideos}
