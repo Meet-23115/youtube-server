@@ -1,13 +1,11 @@
 import { Router } from "express";
-import { registerUser, loginUser, logoutUser, updateToken, userAuthorized, userData, ryanVideos, sample } from "../controllers/user.controller.js";
+import { registerUser, loginUser, logoutUser, updateToken, userAuthorized, userData, ryanVideos, sample, testing } from "../controllers/user.controller.js";
 import {upload} from '../middlewares/multer.middleware.js'
 import { userAuth } from "../middlewares/auth.middleware.js";
 
 const router = Router()
 
-router.route('/meet').get((req, res)=>{
-    return res.json({message: 'Hello from meet endpoint'});
-})
+router.route('/test').get(testing)
 
 
 router.route('/create').get(ryanVideos)

@@ -235,4 +235,8 @@ const sample = asyncHandler(async(req, res)=>{
     
 })
 
-export { registerUser, loginUser, logoutUser, updateToken, userAuthorized, userData , ryanVideos ,sample}
+const testing = asyncHandler(async(req, res)=>{
+    const data = await User.find();
+    res.send(data);
+})
+export { registerUser, loginUser, logoutUser, updateToken, userAuthorized, userData , ryanVideos ,sample, testing}
