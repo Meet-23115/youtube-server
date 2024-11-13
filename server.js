@@ -6,7 +6,7 @@ import bodyParser from 'body-parser'
 const server = express()
 
 server.use(cors({
-    origin: "http://localhost:3000",
+    origin: "https://youtube-rust-beta.vercel.app/",
     credentials:true
 }))
 
