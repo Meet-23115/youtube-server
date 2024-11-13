@@ -76,9 +76,18 @@ const registerUser = asyncHandler(async (req, res) => {
         // console.log(refreshToken)
         // console.log(accessToken);
         return res
-            .cookie('accessToken', accessToken, { maxAge: 900000, sameSite: 'Lax', secure: false, httpOnly: true })
-            .cookie('refreshToken', refreshToken, { httpOnly: true, secure: false, maxAge: 604800000, sameSite: 'Lax' })
-            .json(new ApiResponse(200, { user: { ...user._doc, password: undefined, refreshToken: undefined } }, "User created"))
+        .cookie('accessToken', accessToken, { 
+            maxAge: 900000, 
+            sameSite: 'None', 
+            secure: false, // Use true for production with HTTPS
+            httpOnly: true 
+        })
+        .cookie('refreshToken', refreshToken, { 
+            httpOnly: true, 
+            secure: false, 
+            maxAge: 604800000, 
+            sameSite: 'None' 
+        })            .json(new ApiResponse(200, { user: { ...user._doc, password: undefined, refreshToken: undefined } }, "User created"))
         //  res.status(201).send({ message:"user created", success:true, user: { ...user._doc, password: undefined, refreshToken: undefined } })
 
     } catch (error) {
