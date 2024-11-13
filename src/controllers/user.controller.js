@@ -147,7 +147,7 @@ const loginUser = asyncHandler(async (req, res) => {
             sameSite: 'None', 
             secure: true, 
             httpOnly: true
-          });
+          })
           
         .send({ message: "logged in", success: true, user: { ...user._doc, password: undefined, refreshToken: undefined } })
 
