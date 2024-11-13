@@ -8,7 +8,7 @@ dotenv.config();
 connectDb()
 .then(()=>{
     const port = process.env.PORT || 8080
-    server.listen(port, ()=>console.log(`server is listeing at port ${port}`))
+    server.listen(port, ()=>console.log(`server is Live`))
 })
 .catch((err)=>{
     console.log('MONGODB connection failed !!! ', err)
