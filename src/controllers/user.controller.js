@@ -135,13 +135,20 @@ const loginUser = asyncHandler(async (req, res) => {
 
     res
         .status(200)
-        .cookie('accessToken', accessToken, {
-            maxAge: 900000,
-            sameSite: 'Lax',
-            secure: false,
+        res.cookie('accessToken', accessToken, {
+            maxAge: 900000, 
+            sameSite: 'None',  // For cross-origin requests
+            secure: true,      // Must be true for cross-origin cookies with SameSite=None
             httpOnly: true
-        })
-        .cookie('refreshToken', refreshToken, { httpOnly: true, secure: false, maxAge: 604800000, sameSite: 'Lax' })
+          });
+          
+          res.cookie('refreshToken', refreshToken, {
+            maxAge: 604800000, 
+            sameSite: 'None', 
+            secure: true, 
+            httpOnly: true
+          });
+          
         .send({ message: "logged in", success: true, user: { ...user._doc, password: undefined, refreshToken: undefined } })
 
 
