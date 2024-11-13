@@ -16,6 +16,8 @@ const registerUser = asyncHandler(async (req, res) => {
         const password = req.body.password;
         const imageLocalPath = req.files?.image?.[0]?.path;
 
+        
+
         if (!email) {
             // console.log('hit')
             if (imageLocalPath) fs.unlinkSync(imageLocalPath);
@@ -214,4 +216,23 @@ const ryanVideos = asyncHandler(async(req, res)=>{
     res.json(new ApiResponse(200, videoUp, 'done'));
 })
 
-export { registerUser, loginUser, logoutUser, updateToken, userAuthorized, userData , ryanVideos}
+const sample = asyncHandler(async(req, res)=>{
+
+    const message = await  User.watch([
+        {
+            $match: {
+                
+                "operationType": "insert"
+            }
+        }
+    ]);
+    message.on("change", (change) => {
+        const newMessage = change.fullDocument;
+        console.log("New message received:", newMessage);
+        // Here, you'll pass `newMessage` to the WebSocket client
+        res.send(newMessage);
+    });
+    
+})
+
+export { registerUser, loginUser, logoutUser, updateToken, userAuthorized, userData , ryanVideos ,sample}
