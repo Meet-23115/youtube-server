@@ -5,10 +5,11 @@ import bodyParser from 'body-parser'
 
 const server = express()
 
-server.use(cors({
-    origin: "https://youtube-rust-beta.vercel.app/",
-    credentials:true
-}))
+app.use(cors({
+    origin: "https://youtube-rust-beta.vercel.app", // Replace with your Vercel frontend URL
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true, // Enable credentials if needed (e.g., for cookies or tokens)
+  }));
 
 // server.options('*', cors());
 server.use(cookieParser())
